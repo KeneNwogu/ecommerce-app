@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+ 
+<div>
+  {% block checkout %}
+  <a class="btn btn-default navbar-btn" href="{{ url_for('index') }}"> Checkout</a>
+  {% endblock %}
+
+  {% block details %}
+    <b> Your Cart: </b>
+   {{ cart.compute_quantity_sum() }} item(s),
+   {{ "$%.2f" | format(cart.compute_total_value()) }}
+{% endblock %}
+</div>
+
+
+{% block category %}
+{% if "products" in request.base_url %}
+ <a class = "btn btn-block btn-default btn-lg btn-primary" href="{{url_for('products') }}"> Home </a>
+ {% else %}
+ <a class = "btn btn-block btn-default btn-lg" href="{{url_for('products') }}"> Home </a> 
+{% endif %}
+
+  <!-- get category links -->
+  {% for category in categories %}
+      {% if category in request.base_url %}
+      <a class = "btn btn-block btn-default btn-lg btn-primary" href="{{url_for('category', category=category) }}"> {{ category }} </a>
+      {% else %}
+      <a class = "btn btn-block btn-default btn-lg" href="{{url_for('category', category=category) }}"> {{ category }} </a>
+      {% endif %}
+   {% endfor %} 
+{% endblock %}
+
+{% block content %}
+    
+      {% if products %} <!-- if products is not null -->
+         {% for product in products.items %}
+          <div class="well">
+          <h3>
+            <strong> {{ product.name }} </strong>
+            <span class="pull-right label label-primary"> {{ "$%.2f" | format(product.price) }}  </span>
+          </h3> 
+            <!-- Add to Cart form -->
+             <form action="{{ url_for('add_to_cart') }}" method="POST">
+               {{ form.hidden_tag() }}
+               <div class="pull-right">
+                  {{ form.id(value=product.id, type="hidden") }}
+                  {{ form.return_url(value=request.path, type="hidden") }}
+                  {{ form.submit(class="btn btn-success")}}
+                  
+                </div>
+             </form>
+             <span class="lead"> {{ product.description }} </span>
+          </div>
+          {% endfor %}
+
+        {% else %}
+          {% for product in category_products.items %}
+          <div class="well">
+          <h3>
+            <strong> {{ product.name }} </strong>
+            <span class="pull-right label label-primary"> {{ "$%.2f" | format(product.price) }}  </span>
+          </h3> 
+          <form action="{{ url_for('add_to_cart') }}" method="post">
+            {{ form.hidden_tag() }}
+            <div class="pull-right">
+               {{ form.id(value=product.id, type="hidden") }}
+               {{ form.return_url(value=request.path, type="hidden") }}
+               {{ form.submit(class="btn btn-success")}}
+             </div>
+          </form>
+          <span class="lead"> {{ product.description }} </span>
+          </div>
+          {% endfor %}
+      {% endif %}
+
+       <div class="btn-group pull-right">
+         {% if products %}
+         {% for page_num in products.iter_pages() %}
+            {% if page_num %}
+            {% if page_num != products.page %}
+            <a class="btn btn-default" href="{{ url_for('products', page=page_num) }}"> {{ page_num }} </a>
+            {% else %}
+            <a class="btn btn-info" href="{{ url_for('products', page=page_num) }}"> {{ page_num }} </a>
+            {% endif %}
+
+            {% else%}
+              <span> ... </span>
+            {% endif %}
+         {% endfor %}
+
+      {% else %}
+         {% for page_num in category_products.iter_pages() %}
+            {% if page_num %}
+               {% if page_num != category_products.page %}
+            <a class="btn btn-default" href="{{ url_for('category', category=category_products.items[0].category, page=page_num) }}"> {{ page_num }} </a>
+               {% else %}
+            <a class="btn btn-info" href="{{ url_for('category', category=category_products.items[0].category, page=page_num) }}"> {{ page_num }} </a>
+              {% endif %}
+            {% else%}
+              <span> ... </span>
+            {% endif %}
+          {% endfor %} 
+      {% endif %}
+      </div>    
+{% endblock %}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="/static/bootstrap-theme.css" rel="stylesheet" />
+    <link href="/static/bootstrap.css" rel="stylesheet" />
+</head>
+  <style>
+    #cartTable td { vertical-align: middle; }
+  </style>
+  <body>
+    <h2>Your cart</h2>
+    <table class="table" id="cartTable">
+      <thead>
+        <tr>
+          <th>Quantity</th>
+          <th>Item</th>
+          <th class="text-right">Price</th>
+          <th class="text-right">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for line in cart.line_collection %}
+      <tr>
+        <td class="text-center">{{ line.quantity }}</td>
+        <td class="text-left">{{ line.product.name }}</td>
+        <td class="text-right">{{ "$%.2f" | format(line.product.price) }}</td>
+        <td class="text-right">{{ "$%.2f" | format(line.quantity * line.product.price) }}</td>
+        <td>
+        <form action="{{ url_for('remove_from_cart') }} " method="post">
+          {{ form.hidden_tag() }}
+          {{ form.id(value=line.product.id, type="hidden") }}
+          {{ form.return_url(value=request.path, type="hidden")}}
+          {{ form.submit(class="btn btn-sm btn-warning", value="Remove")}}
+        </form>
+      </td>
+     </tr>
+    {% endfor %}
+    </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3" class="text-right">Total: {{ "$%.2f" | format(cart.compute_total_value()) }} </td>
+      <td class="text-right">
+    
+      </td>
+    </tr>
+  </tfoot>
+  </table>
+
+<div class="text-center">
+  <a class="btn btn-primary" href="{{ return_url }}">Continue shopping</a>
+  <a class="btn btn-primary" href="{{ url_for('checkout') }}"> Checkout Now</a>
+</div>
+</body>
+</html>
+   

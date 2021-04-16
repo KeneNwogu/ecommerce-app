@@ -1,0 +1,32 @@
+{% include "layout.html" %}
+
+<!-- <div class="navbar-text navbar-right">
+    <b> Your Cart: </b>
+    {{ cart.compute_quantity_sum() }} item(s),
+    {{ "$%.2f" | format(cart.compute_total_value()) }}
+</div> -->
+    
+<div id="categories" class="col-xs-3">
+    {% if "products" in request.base_url %}
+    <a class="btn btn-block btn-default btn-lg btn-primary" href="{{url_for('products') }}"> Home </a>
+    {% else %}
+    <a class="btn btn-block btn-default btn-lg" href="{{url_for('products') }}"> Home </a>
+    {% endif %}
+
+    <!-- get category links -->
+    {% for category in categories %}
+    {% if category in request.base_url %}
+    <a class="btn btn-block btn-default btn-lg btn-primary" href="{{url_for('category', category=category) }}">
+        {{ category }} </a>
+    {% else %}
+    <a class="btn btn-block btn-default btn-lg" href="{{url_for('category', category=category) }}"> {{ category }} </a>
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% block fill %}
+{% endblock %}
+
+
+
+</html>

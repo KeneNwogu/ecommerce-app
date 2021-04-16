@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap-theme.css" rel="stylesheet" />
+    <link href="static/bootstrap.css" rel="stylesheet" />
+    <title>SPORTS STORE</title>
+    <style>
+        /* body{
+            margin: auto;
+        } */
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-inverse" role="navigation">
+        <a class="navbar-brand" href="#">SPORTS STORE</a>
+        <div class="navbar-right">
+            {% block checkout %}
+            {% endblock %}
+        </div>
+        <div class="navbar-text navbar-right">
+            {% block details %}
+            {% endblock %}
+        </div>
+    </div>
+   
+    <div class="row panel">
+        <div id="categories" class="col-xs-3">
+            {% block category %} 
+            {% endblock %}
+        </div>
+
+        <div class="col-xs-8">
+            {% block content %} {% endblock %}   
+        </div>
+    </div>
+</body>
+</html>

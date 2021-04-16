@@ -1,0 +1,6 @@
+var.py
+test2.py
+db.py
+.venv
+.vscode
+ecommerce/__pycache__
